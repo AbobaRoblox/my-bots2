@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  bots:
+    build: .
+    container_name: python-bots
+    restart: unless-stopped
+    volumes:
+      # Монтирование логов для доступа с хоста
+      - ./logs:/app/logs
+      # Монтирование конфигов (опционально, для редактирования без пересборки)
+      - ./config.json:/app/config.json
+      - ./shopbot_config.json:/app/shopbot_config.json
+    environment:
+      # Переменные окружения (можно использовать .env файл)
+      - TZ=Europe/Moscow
+      - PYTHONUNBUFFERED=1
+    # Если нужен доступ к сети хоста
+    # network_mode: host
+    
+    # Ограничения ресурсов (опционально)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+# Опционально: создание именованного volume для логов
+volumes:
+  logs:
+    driver: local
+
